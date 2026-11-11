@@ -2,12 +2,34 @@
  * timer.js
  * Propietari: Guillem (guillembarjuan)
  * Temporitzador de cada pregunta.
+ *
+ * Ús esperat des de game.js (fent servir TIME_PER_QUESTION de main.js):
+ *
+ *   startTimer(TIME_PER_QUESTION, function (segons) {
+ *     // s'executa a l'inici i cada segon
+ *   }, function () {
+ *     // s'ha acabat el temps: comptar la pregunta com a fallada
+ *     // i passar a la següent
+ *   });
+ *
+ *   // Quan el jugador respon, abans de passar de pregunta:
+ *   stopTimer();
+ *
+ * Requisits a l'HTML: un element <div id="timer"></div> dins
+ * screen-game. Si no hi és, el temporitzador compta igual però
+ * no dibuixa res.
  */
 
 // Identificador de l'interval actiu (null si no n'hi ha cap)
 let timerIntervalId = null;
 
-// Dibuixa el número i la barra dins #timer
+/**
+ * Dibuixa el número i la barra dins #timer. Funció interna.
+ *
+ * @param {number} remaining - Segons que queden.
+ * @param {number} total - Segons inicials, per calcular el % de la barra.
+ * @param {boolean} instant - Si és true, la barra canvia sense animació.
+ */
 function renderTimer(remaining, total, instant) {
   const container = document.getElementById("timer");
   if (!container) {
@@ -55,7 +77,15 @@ function renderTimer(remaining, total, instant) {
   }
 }
 
-// Inicia el compte enrere
+/**
+ * Inicia un compte enrere. Si ja n'hi havia un en marxa, l'atura abans.
+ *
+ * @param {number} seconds - Segons del compte enrere.
+ * @param {function(number)} onTick - Es crida de seguida amb `seconds`
+ *   i després cada segon amb els segons que queden (fins a 0).
+ * @param {function()} onTimeout - Es crida una sola vegada en arribar a 0,
+ *   amb el temporitzador ja aturat (s'hi pot cridar startTimer de nou).
+ */
 function startTimer(seconds, onTick, onTimeout) {
   stopTimer();
 
@@ -98,7 +128,11 @@ function startTimer(seconds, onTick, onTimeout) {
   timerIntervalId = intervalId;
 }
 
-// Atura el compte enrere actual
+/**
+ * Atura el compte enrere actual sense cridar cap callback.
+ * El número i la barra es queden com estaven.
+ * Es pot cridar encara que no hi hagi cap temporitzador en marxa.
+ */
 function stopTimer() {
   if (timerIntervalId !== null) {
     clearInterval(timerIntervalId);
