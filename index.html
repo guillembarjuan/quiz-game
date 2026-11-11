@@ -16,13 +16,35 @@
     <!-- ===== PANTALLA screen-welcome (propietari: Joan) ===== -->
 
     <section class="screen" id="screen-welcome">
-      <!-- Joan: contingut aquí -->
+      <div class="card access-card">
+        <header>
+          <p class="access-eyebrow">Quiz Trivial</p>
+          <h1>Quant en saps?</h1>
+          <p>Escriu el teu nom per començar a jugar.</p>
+        </header>
+        <form id="welcome-form" novalidate>
+          <label for="player-name">Nom del jugador</label>
+          <input id="player-name" name="player-name" type="text"
+                 autocomplete="nickname" required
+                 aria-describedby="name-help name-error">
+          <p id="name-help" class="access-help">Màxim 20 caràcters.</p>
+          <p id="name-error" class="access-error" role="alert"></p>
+          <button class="btn btn--primary" type="submit">Començar</button>
+        </form>
+      </div>
     </section>
 
     <!-- ===== PANTALLA screen-types (propietari: Joan) ===== -->
 
     <section class="screen" id="screen-types">
-      <!-- Joan: contingut aquí -->
+      <div class="card access-card">
+        <header>
+          <p class="access-eyebrow">Quiz Trivial</p>
+          <h2 id="types-greeting" tabindex="-1">Hola!</h2>
+          <p>Tria un tipus de preguntes.</p>
+        </header>
+        <div id="category-list" aria-label="Tipus de preguntes"></div>
+      </div>
     </section>
 
     <!-- ===== PANTALLA screen-game (propietari: Pol) ===== -->
