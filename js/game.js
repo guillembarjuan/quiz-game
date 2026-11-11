@@ -26,6 +26,7 @@ function shuffleQuestions(questions) {
 function startGame(name, categoryKey) {
   gameState.active = false;
   gameState.turn++;
+  if (typeof stopTimer === "function") { stopTimer(); }
   const category = typeof QUESTIONS !== "undefined" &&
     Object.prototype.hasOwnProperty.call(QUESTIONS, categoryKey) ? QUESTIONS[categoryKey] : null;
   const error = document.getElementById("game-error");
@@ -83,6 +84,20 @@ function renderQuestion() {
     options.appendChild(button);
   });
   title.focus();
+  const time = document.getElementById("game-time");
+  // La integració és opcional fins que Guillem porti timer.js a test.
+  if (typeof startTimer === "function") {
+    const seconds = typeof TIME_PER_QUESTION === "number" ? TIME_PER_QUESTION : 15;
+    startTimer(seconds, function (remaining) {
+      if (gameState.active && turn === gameState.turn) {
+        time.textContent = "Temps restant: " + remaining + " s";
+      }
+    }, function () {
+      if (gameState.active && turn === gameState.turn) { answerQuestion(null); }
+    });
+  } else {
+    time.textContent = "Temporitzador encara no disponible.";
+  }
 }
 
 /** Funció pura: es pot provar també des de la consola del navegador. */
@@ -97,6 +112,7 @@ function answerQuestion(chosenIndex) {
     return;
   }
   gameState.answered = true;
+  if (typeof stopTimer === "function") { stopTimer(); }
   const question = gameState.questions[gameState.index];
   const isCorrect = checkAnswer(question, chosenIndex);
   if (isCorrect) { gameState.score++; }
@@ -137,6 +153,7 @@ function nextQuestion() {
   } else {
     gameState.active = false;
     gameState.turn++;
+    if (typeof stopTimer === "function") { stopTimer(); }
     showResults({
       name: gameState.name, category: gameState.category, score: gameState.score,
       total: gameState.questions.length, answers: gameState.answers.slice()
@@ -149,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("game-back").addEventListener("click", function () {
     gameState.active = false;
     gameState.turn++;
+    if (typeof stopTimer === "function") { stopTimer(); }
     showScreen("screen-types");
     const greeting = document.getElementById("types-greeting");
     if (greeting) { greeting.focus(); }
