@@ -50,8 +50,25 @@
     <!-- ===== PANTALLA screen-game (propietari: Pol) ===== -->
 
     <section class="screen" id="screen-game">
-      <!-- Pol: contingut aquí -->
-      <div id="timer"></div>
+      <div class="card game-card">
+        <p id="game-error" role="alert"></p>
+        <div id="game-content" hidden>
+          <header>
+            <p id="game-category" class="game-category"></p>
+            <div class="game-meta">
+              <p id="game-progress"></p>
+              <p id="game-score" aria-live="polite"></p>
+            </div>
+            <div id="timer"></div>
+            <p id="game-time" class="game-time"></p>
+          </header>
+          <h2 id="game-question" tabindex="-1"></h2>
+          <div id="game-options" role="group" aria-labelledby="game-question"></div>
+          <p id="game-feedback" class="game-feedback" role="status" aria-live="polite"></p>
+          <button id="game-next" class="btn btn--primary" type="button" hidden>Següent</button>
+        </div>
+        <button id="game-back" class="btn game-back" type="button">Tornar als tipus</button>
+      </div>
     </section>
 
     <!-- ===== PANTALLA screen-results (propietari: Miquel) ===== -->

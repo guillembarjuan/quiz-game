@@ -3,3 +3,30 @@
  * Propietari: Pol (polserrano)
  * Estils de la pantalla de joc.
  */
+
+.game-card { max-width: 46rem; }
+.game-card [hidden] { display: none !important; }
+.game-category {
+  color: var(--color-primary);
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.game-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; }
+.game-meta p { margin-bottom: .5rem; font-weight: 650; }
+.game-time { font-size: .9rem; margin-top: .5rem; }
+#game-question { margin-block: 1.5rem; line-height: 1.35; overflow-wrap: anywhere; }
+#game-options { display: grid; gap: .75rem; }
+.game-option { justify-content: flex-start; text-align: left; overflow-wrap: anywhere; }
+/* El text del feedback acompanya els colors per no dependre només del color. */
+.game-option.disabled { opacity: 1; cursor: default; color: var(--color-text); border-color: #cbd0df; }
+.game-option.correct { background: #e6f7ee; border-color: #147a45; color: #115c35; }
+.game-option.wrong { background: #fff0f0; border-color: #b42332; color: #8c1b28; }
+.game-option:disabled:hover { filter: none; }
+.game-feedback { min-height: 3rem; margin-block: 1rem; font-weight: 650; }
+.game-back { margin-top: 1.25rem; font-size: .9rem; }
+#game-error:empty { display: none; }
+#game-error { color: #8c1b28; font-weight: 650; }
+@media (min-width: 40rem) {
+  #game-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
