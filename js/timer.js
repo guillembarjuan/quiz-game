@@ -39,6 +39,9 @@ function renderTimer(remaining, total, instant) {
 
   number.textContent = remaining;
 
+  // Últims 5 segons: classe d'avís
+  container.classList.toggle("timer--danger", remaining <= 5);
+
   const percent = total > 0 ? (remaining / total) * 100 : 0;
 
   if (instant) {
