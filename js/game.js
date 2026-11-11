@@ -9,6 +9,12 @@ const gameState = {
   name: "", category: null, questions: [], index: 0,
   score: 0, answers: [], answered: false, active: false, turn: 0
 };
+let gameAdvanceTimeout = null;
+
+function cancelGameAdvance() {
+  clearTimeout(gameAdvanceTimeout);
+  gameAdvanceTimeout = null;
+}
 
 /** Fisher-Yates sobre una còpia: conserva intactes les preguntes i les opcions. */
 function shuffleQuestions(questions) {
@@ -24,6 +30,7 @@ function shuffleQuestions(questions) {
 
 /** Inicia una partida nova amb la categoria que arriba d'access.js. */
 function startGame(name, categoryKey) {
+  cancelGameAdvance();
   gameState.active = false;
   gameState.turn++;
   if (typeof stopTimer === "function") { stopTimer(); }
@@ -85,6 +92,7 @@ function renderQuestion() {
   });
   title.focus();
   const time = document.getElementById("game-time");
+  time.textContent = "Temporitzador encara no disponible.";
   // La integració és opcional fins que Guillem porti timer.js a test.
   if (typeof startTimer === "function") {
     const seconds = typeof TIME_PER_QUESTION === "number" ? TIME_PER_QUESTION : 15;
@@ -143,10 +151,18 @@ function answerQuestion(chosenIndex) {
   next.textContent = gameState.index === gameState.questions.length - 1 ? "Veure resultats" : "Següent";
   next.hidden = false;
   next.focus();
+  // Donem temps a llegir la correcta abans d'avançar en esgotar el temps.
+  if (chosenIndex === null) {
+    const turn = gameState.turn;
+    gameAdvanceTimeout = setTimeout(function () {
+      if (gameState.active && turn === gameState.turn) { nextQuestion(); }
+    }, 1800);
+  }
 }
 
 function nextQuestion() {
   if (!gameState.active || !gameState.answered) { return; }
+  cancelGameAdvance();
   gameState.index++;
   if (gameState.index < gameState.questions.length) {
     renderQuestion();
@@ -164,6 +180,7 @@ function nextQuestion() {
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("game-next").addEventListener("click", nextQuestion);
   document.getElementById("game-back").addEventListener("click", function () {
+    cancelGameAdvance();
     gameState.active = false;
     gameState.turn++;
     if (typeof stopTimer === "function") { stopTimer(); }
