@@ -18,6 +18,7 @@ Les categories i la crida a `startGame` s'han comprovat amb dades i una funció
 de prova en memòria: no s'han modificat `questions.js` ni `game.js`.
 La partida completa s'ha de comprovar quan els companys integrin les seves parts.
 
-La primera PR conté mockups i base. Les pantalles es mantenen a
-`feature/access-screens` fins que la primera PR estigui aprovada i fusionada;
-després s'integren a `dev/joan` per obrir la segona PR cap a `test`.
+La primera PR (#2) conté mockups i base i està aprovada per Pol i fusionada.
+Les pantalles de `feature/access-screens` estan integrades a `dev/joan`,
+sincronitzada amb `test`, per a la segona PR. Cal l'aprovació de Pol abans
+de fusionar aquesta segona PR cap a `test`.
