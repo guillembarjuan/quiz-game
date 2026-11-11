@@ -48,6 +48,8 @@ function renderQuestion() {
   if (!gameState.active) { return; }
   gameState.answered = false;
   const question = gameState.questions[gameState.index];
+  document.getElementById("game-feedback").textContent = "";
+  document.getElementById("game-next").hidden = true;
   document.getElementById("game-progress").textContent =
     "Pregunta " + (gameState.index + 1) + " de " + gameState.questions.length;
   document.getElementById("game-score").textContent = "Punts: " + gameState.score;
@@ -74,6 +76,9 @@ function checkAnswer(question, chosenIndex) {
 
 function answerQuestion(chosenIndex) {
   if (!gameState.active || gameState.answered) { return; }
+  if (chosenIndex !== null && (!Number.isInteger(chosenIndex) || chosenIndex < 0 || chosenIndex > 3)) {
+    return;
+  }
   gameState.answered = true;
   const question = gameState.questions[gameState.index];
   const isCorrect = checkAnswer(question, chosenIndex);
@@ -83,7 +88,28 @@ function answerQuestion(chosenIndex) {
     text: question.text, chosen: chosenIndex === null ? null : question.options[chosenIndex],
     correct: question.options[question.correct], isCorrect: isCorrect
   });
-  nextQuestion();
+  // Bloquegem totes les opcions abans de mostrar el feedback.
+  const buttons = document.getElementById("game-options").querySelectorAll("button");
+  buttons.forEach(function (button, index) {
+    button.disabled = true;
+    button.classList.add("disabled");
+    if (index === question.correct) {
+      button.classList.add("correct");
+      button.textContent += " — Correcta";
+    } else if (index === chosenIndex) {
+      button.classList.add("wrong");
+      button.textContent += " — La teva resposta";
+    }
+  });
+  document.getElementById("game-score").textContent = "Punts: " + gameState.score;
+  document.getElementById("game-feedback").textContent = chosenIndex === null ?
+    "Temps esgotat. La resposta correcta és: " + question.options[question.correct] :
+    isCorrect ? "Correcte! Has guanyat un punt." :
+    "Incorrecte. La resposta correcta és: " + question.options[question.correct];
+  const next = document.getElementById("game-next");
+  next.textContent = gameState.index === gameState.questions.length - 1 ? "Veure resultats" : "Següent";
+  next.hidden = false;
+  next.focus();
 }
 
 function nextQuestion() {
@@ -101,6 +127,7 @@ function nextQuestion() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("game-next").addEventListener("click", nextQuestion);
   document.getElementById("game-back").addEventListener("click", function () {
     gameState.active = false;
     showScreen("screen-types");
