@@ -7,12 +7,25 @@
 // Estat propi del joc: no modifica el banc compartit de Miquel.
 const gameState = {
   name: "", category: null, questions: [], index: 0,
-  score: 0, answers: [], answered: false, active: false
+  score: 0, answers: [], answered: false, active: false, turn: 0
 };
+
+/** Fisher-Yates sobre una còpia: conserva intactes les preguntes i les opcions. */
+function shuffleQuestions(questions) {
+  const shuffled = questions.slice();
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const other = Math.floor(Math.random() * (index + 1));
+    const question = shuffled[index];
+    shuffled[index] = shuffled[other];
+    shuffled[other] = question;
+  }
+  return shuffled;
+}
 
 /** Inicia una partida nova amb la categoria que arriba d'access.js. */
 function startGame(name, categoryKey) {
   gameState.active = false;
+  gameState.turn++;
   const category = typeof QUESTIONS !== "undefined" &&
     Object.prototype.hasOwnProperty.call(QUESTIONS, categoryKey) ? QUESTIONS[categoryKey] : null;
   const error = document.getElementById("game-error");
@@ -35,7 +48,7 @@ function startGame(name, categoryKey) {
   }
 
   Object.assign(gameState, {
-    name: name, category: categoryKey, questions: category.questions.slice(),
+    name: name, category: categoryKey, questions: shuffleQuestions(category.questions),
     index: 0, score: 0, answers: [], answered: false, active: true
   });
   document.getElementById("game-category").textContent = category.label;
@@ -47,6 +60,7 @@ function startGame(name, categoryKey) {
 function renderQuestion() {
   if (!gameState.active) { return; }
   gameState.answered = false;
+  const turn = ++gameState.turn;
   const question = gameState.questions[gameState.index];
   document.getElementById("game-feedback").textContent = "";
   document.getElementById("game-next").hidden = true;
@@ -62,7 +76,10 @@ function renderQuestion() {
     button.type = "button";
     button.className = "btn game-option";
     button.textContent = option;
-    button.addEventListener("click", function () { answerQuestion(chosenIndex); });
+    button.addEventListener("click", function () {
+      // Un clic pendent d'una pregunta anterior no pot respondre la nova.
+      if (turn === gameState.turn) { answerQuestion(chosenIndex); }
+    });
     options.appendChild(button);
   });
   title.focus();
@@ -119,6 +136,7 @@ function nextQuestion() {
     renderQuestion();
   } else {
     gameState.active = false;
+    gameState.turn++;
     showResults({
       name: gameState.name, category: gameState.category, score: gameState.score,
       total: gameState.questions.length, answers: gameState.answers.slice()
@@ -130,6 +148,9 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("game-next").addEventListener("click", nextQuestion);
   document.getElementById("game-back").addEventListener("click", function () {
     gameState.active = false;
+    gameState.turn++;
     showScreen("screen-types");
+    const greeting = document.getElementById("types-greeting");
+    if (greeting) { greeting.focus(); }
   });
 });
