@@ -4,10 +4,58 @@
  * Estils generals i visibilitat de les pantalles.
  */
 
-.screen {
-  display: none;
+:root {
+  --color-primary: #4338ca;
+  --color-bg: #f4f5fb;
+  --color-text: #172033;
+  --color-surface: #ffffff;
+  --radius: 1rem;
+  --space: 1rem;
 }
 
-.screen.active {
-  display: block;
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+img { display: block; max-width: 100%; }
+h1, h2, p { margin-top: 0; }
+
+/* main.js activa una sola pantalla amb la classe active. */
+.screen { display: none; min-height: 100vh; padding: var(--space); }
+.screen.active { display: grid; place-items: center; }
+.card {
+  width: 100%;
+  max-width: 42rem;
+  padding: calc(var(--space) * 1.5);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: 0 12px 40px #17203312;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: .75rem 1.25rem;
+  border: 2px solid var(--color-primary);
+  border-radius: calc(var(--radius) / 2);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: 650;
+  text-decoration: none;
+  text-align: center;
+}
+.btn--primary { background: var(--color-primary); color: var(--color-surface); }
+.btn:hover { filter: brightness(.93); }
+.btn:disabled { opacity: .55; cursor: default; }
+:focus-visible { outline: 3px solid var(--color-text); outline-offset: 4px; }
+@media (min-width: 48rem) {
+  .screen { padding: calc(var(--space) * 3); }
+  .card { padding: calc(var(--space) * 2.5); }
 }
