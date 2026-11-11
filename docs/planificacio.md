@@ -35,6 +35,28 @@ Tenir una primera versió jugable del Quiz Trivial: el jugador escriu el nom, tr
 | Joc principal i gestió de preguntes | polserrano | dev/pol | 12/11 matí | Seguiment 1 (12/11) |
 | Temps per pregunta (integració) | polserrano | dev/pol | 12/11 matí | Seguiment 1 (12/11) |
 
+## Cerimònies
+
+| Cerimònia | Quan | Durada | Contingut |
+|-----------|------|--------|-----------|
+| Sprint planning | 11/11 a la nit | 15 min | Repartir les tasques i omplir el tauler |
+| Daily | 12/11 al matí | 15 min | Què vaig fer, què faré, què em bloqueja |
+| Sprint review | Seguiment del 12/11 | El que marqui el professor | Ensenyar la versió de `main` |
+| Retrospectiva | Després del seguiment | 15 min | Què ha anat bé, què millorem |
+
+## Regla Scrumban
+
+Cada persona pot tenir com a **màxim 2 targetes a In progress**. Per començar-ne una de nova, primer se n'ha d'acabar o bloquejar una altra.
+
+## Definició de fet
+
+Una tasca està feta quan:
+
+- [ ] Funciona al navegador.
+- [ ] La PR l'ha revisada i aprovada un company.
+- [ ] Els commits segueixen el format `tipus(àmbit): descripció`.
+- [ ] La issue és a la columna Done.
+
 ## Versions
 
 | Versió | Contingut |
