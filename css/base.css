@@ -1,0 +1,13 @@
+/*
+ * base.css
+ * Propietari: Joan (joanosunaa)
+ * Estils generals i visibilitat de les pantalles.
+ */
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
