@@ -1,5 +1,90 @@
-/*
- * results.css
- * Propietari: Miquel (miguelvico)
- * Estils de la pantalla de resultats.
+/**
+ * css/results.css
+ * Propietari: Miquel Vico
+ * Estils específics per a la pantalla de resultats.
  */
+
+.card--results {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.results__summary {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary, #2c3e50);
+}
+
+.results__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding-right: 0.5rem;
+}
+
+.results__item {
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-left: 5px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-card, #f9f9f9);
+}
+
+.results__item--correct {
+  border-left-color: #2ecc71;
+  background-color: #f0fff4;
+}
+
+.results__item--incorrect {
+  border-left-color: #e74c3c;
+  background-color: #fff5f5;
+}
+
+.results__question-text {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.results__answer-info {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.results__badge {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-right: 0.5rem;
+}
+
+.results__badge--ok {
+  background-color: #2ecc71;
+  color: #ffffff;
+}
+
+.results__badge--fail {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+.results__correct-solution {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: #d35400;
+  font-style: italic;
+}
+
+.results__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
