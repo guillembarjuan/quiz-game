@@ -92,6 +92,9 @@ function renderQuestion() {
   });
   title.focus();
   const time = document.getElementById("game-time");
+  const timer = document.getElementById("timer");
+  time.hidden = false;
+  if (timer) { timer.hidden = true; }
   time.textContent = "Temporitzador encara no disponible.";
   // La integració és opcional fins que Guillem porti timer.js a test.
   if (typeof startTimer === "function") {
@@ -99,6 +102,13 @@ function renderQuestion() {
     startTimer(seconds, function (remaining) {
       if (gameState.active && turn === gameState.turn) {
         time.textContent = "Temps restant: " + remaining + " s";
+        // Guillem ja dibuixa el compte enrere: evitem dos comptadors visibles.
+        const hasVisualTimer = timer && timer.querySelector(".timer__number");
+        time.hidden = Boolean(hasVisualTimer);
+        if (timer) {
+          timer.hidden = !hasVisualTimer;
+          timer.setAttribute("aria-label", time.textContent);
+        }
       }
     }, function () {
       if (gameState.active && turn === gameState.turn) { answerQuestion(null); }
