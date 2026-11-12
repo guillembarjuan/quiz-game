@@ -1,41 +1,27 @@
 # Planificació
 
-## Sprint 1
+Planificació del Quiz Trivial: com treballem, qui fa què, quan i com arriba cada canvi a `main`.
 
-**Durada:** de l'11/11 al 18/11 (1 setmana).
-**Primera revisió:** seguiment del 12/11.
+## 1. Metodologia
 
-### Objectiu
+Fem servir **Scrumban**: el tauler de Kanban del GitHub Project per seguir la feina dia a dia i sprints curts de Scrum per marcar objectius i dates.
 
-Tenir una primera versió jugable del Quiz Trivial: el jugador escriu el nom, tria el tipus de preguntes, respon amb temps límit i veu els resultats amb l'opció de tornar a jugar.
+### Tauler Kanban
 
-### Abast
+Cada tasca és una issue amb la seva targeta al tauler. Les columnes són:
 
-- Repositori, flux de branques, GitHub Project i planificació.
-- Anàlisi de requisits i banc de preguntes.
-- Mockup i estils base.
-- Pantalles de nom i de tipus de preguntes.
-- Joc principal i gestió de preguntes.
-- Temporitzador per pregunta.
-- Pantalla de resultats i tornar a jugar.
-- Integració a `test` i publicació de les versions v1.1 i v1.2 a `main`.
+| Columna | Significat |
+|---------|------------|
+| Backlog | Tasques pendents, encara no començades |
+| In progress | Algú hi està treballant a la seva branca |
+| In review | Hi ha una PR oberta esperant la revisió d'un company |
+| Done | La tasca compleix la definició de fet |
 
-### Tasques
+**Límit de WIP:** cada persona pot tenir com a **màxim 2 targetes a In progress**. Per començar-ne una de nova, primer se n'ha d'acabar o bloquejar una altra.
 
-| Tasca | Responsable (usuari de GitHub) | Branca | Data límit | Milestone |
-|-------|--------------------------------|--------|------------|-----------|
-| Repo, Project i planificació | guillembarjuan | dev/guillem | 11/11 | Seguiment 1 (12/11) |
-| Temporitzador | guillembarjuan | dev/guillem | 12/11 matí | Seguiment 1 (12/11) |
-| Integració, PR a main i tags v1.1 i v1.2 | guillembarjuan | dev/guillem | 12/11, 1 hora abans del seguiment | Seguiment 1 (12/11) |
-| Anàlisi de requisits | miguelvico | dev/miquel | 12/11 matí | Seguiment 1 (12/11) |
-| Banc de preguntes (`js/questions.js`) | miguelvico | dev/miquel | 11/11 nit | Seguiment 1 (12/11) |
-| Resultats i tornar a jugar | miguelvico | dev/miquel | 12/11 matí | Seguiment 1 (12/11) |
-| Mockup i CSS base | joanosunaa | dev/joan | 11/11 nit | Seguiment 1 (12/11) |
-| Pantalles de nom i de tipus | joanosunaa | dev/joan | 12/11 matí | Seguiment 1 (12/11) |
-| Joc principal i gestió de preguntes | polserrano | dev/pol | 12/11 matí | Seguiment 1 (12/11) |
-| Temps per pregunta (integració) | polserrano | dev/pol | 12/11 matí | Seguiment 1 (12/11) |
+### Sprints i cerimònies
 
-## Cerimònies
+Els sprints són curts (d'un o dos dies) i cadascun acaba amb una versió etiquetada a `main`.
 
 | Cerimònia | Quan | Durada | Contingut |
 |-----------|------|--------|-----------|
@@ -44,11 +30,7 @@ Tenir una primera versió jugable del Quiz Trivial: el jugador escriu el nom, tr
 | Sprint review | Seguiment del 12/11 | El que marqui el professor | Ensenyar la versió de `main` |
 | Retrospectiva | Després del seguiment | 15 min | Què ha anat bé, què millorem |
 
-## Regla Scrumban
-
-Cada persona pot tenir com a **màxim 2 targetes a In progress**. Per començar-ne una de nova, primer se n'ha d'acabar o bloquejar una altra.
-
-## Definició de fet
+### Definició de fet
 
 Una tasca està feta quan:
 
@@ -57,10 +39,11 @@ Una tasca està feta quan:
 - [ ] Els commits segueixen el format `tipus(àmbit): descripció`.
 - [ ] La issue és a la columna Done.
 
-## Versions
+## 2. Equip i rols
 
-| Versió | Contingut |
-|--------|-----------|
-| v1.0 | Estructura del projecte |
-| v1.1 | Accés (nom i tipus) + joc + preguntes |
-| v1.2 | Resultats + tornar a jugar + temps |
+| Nom | Usuari de GitHub | Rol |
+|-----|------------------|-----|
+| Guillem | guillembarjuan | Integració, temporitzador i etiquetes de versió |
+| Miquel | miguelvico | Preguntes, resultats i requisits |
+| Pol | polserrano | Lògica del joc |
+| Joan | joanosunaa | Disseny, mockup i pantalles d'accés |
