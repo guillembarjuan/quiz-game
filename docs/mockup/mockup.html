@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Trivial · Mockup i guia d'estil</title>
+  <!--
+    Mockup i guia d'estil del Quiz Trivial.
+    Fitxer autònom: sense frameworks, sense fonts ni imatges externes.
+    Tots els valors surten de css/base.css, access.css, game.css,
+    timer.css i results.css. Si l'app canvia, cal actualitzar-lo.
+  -->
+  <style>
+    /* ===== Valors de l'app (còpia exacta de css/base.css :root) ===== */
+    :root {
+      --color-primary: #4338ca;
+      --color-bg: #f4f5fb;
+      --color-text: #172033;
+      --color-surface: #ffffff;
+      --radius: 1rem;
+      --space: 1rem;
+
+      /* Colors que l'app escriu directament als fitxers de cada pantalla */
+      --ok-border: #147a45;   /* game.css .correct */
+      --ok-bg: #e6f7ee;
+      --ok-text: #115c35;
+      --ko-border: #b42332;   /* game.css .wrong i timer.css perill */
+      --ko-bg: #fff0f0;
+      --ko-text: #8c1b28;
+      --disabled-border: #cbd0df;
+      --warning: #d35400;     /* results.css .results__correct-solution */
+      --timer-track: color-mix(in srgb, var(--color-text) 10%, var(--color-surface));
+
+      /* Només per a la guia (no són de l'app) */
+      --guide-muted: #4a5368;
+      --guide-line: #dde0ea;
+      --escala: .6;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    button, input { font: inherit; }
+
+    /* ===== Estructura de la guia ===== */
+    .guia { max-width: 76rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .guia > header { margin-bottom: 2rem; }
+    .guia-eyebrow { margin: 0; color: var(--color-primary); font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .guia h1 { margin: .25rem 0 .5rem; font-size: clamp(1.75rem, 5vw, 2.25rem); line-height: 1.2; }
+    .guia-intro { max-width: 60ch; margin: 0; color: var(--guide-muted); }
+    .guia nav ol { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.25rem 0 0; padding: 0; list-style: none; counter-reset: idx; }
+    .guia nav a {
+      display: inline-block; padding: .35rem .75rem; border: 1px solid var(--guide-line);
+      border-radius: 999px; background: var(--color-surface); color: var(--color-text); text-decoration: none; font-size: .9rem;
+    }
+    .guia nav a:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .guia :focus-visible { outline: 3px solid var(--color-text); outline-offset: 4px; }
+
+    .seccio {
+      margin-top: 2rem; padding: 2rem; border-radius: var(--radius);
+      background: var(--color-surface); box-shadow: 0 12px 40px #17203312;
+    }
+    .seccio > h2 { margin: 0 0 .25rem; font-size: 1.5rem; line-height: 1.25; }
+    .seccio > h2 span { color: var(--color-primary); font-variant-numeric: tabular-nums; }
+    .seccio-desc { margin: 0 0 1.5rem; max-width: 70ch; color: var(--guide-muted); }
+    .seccio h3 { margin: 2rem 0 .75rem; font-size: 1.1rem; }
+    .seccio h3:first-of-type { margin-top: 0; }
+    code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .875em; }
+    .font { font-size: .8rem; color: var(--guide-muted); }
+
+    .taula { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .taula th, .taula td { padding: .55rem .6rem; border-bottom: 1px solid var(--guide-line); text-align: left; vertical-align: middle; }
+    .taula th { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--guide-muted); }
+    .taula-wrap { overflow-x: auto; }
+
+    .etiqueta {
+      display: inline-block; padding: .1rem .45rem; border-radius: 999px;
+      font-size: .75rem; font-weight: 700; white-space: nowrap;
+    }
+    .etiqueta--ok { background: var(--ok-bg); color: var(--ok-text); }
+    .etiqueta--ko { background: var(--ko-bg); color: var(--ko-text); }
+    .etiqueta--info { background: #ecebfb; color: var(--color-primary); }
+
+    /* ===== 1. Paleta ===== */
+    .paleta { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 1rem; }
+    .mostra { overflow: hidden; border: 1px solid var(--guide-line); border-radius: .5rem; }
+    .mostra__color {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      height: 6rem; padding: .6rem .75rem; font-weight: 650;
+    }
+    .mostra__color small { font-weight: 700; font-size: .75rem; }
+    .mostra__info { padding: .6rem .75rem .75rem; font-size: .85rem; }
+    .mostra__info strong { display: block; font-size: .95rem; }
+    .mostra__info code { color: var(--guide-muted); }
+    .mostra__info p { margin: .35rem 0 0; }
+
+    /* ===== 2. Tipografia ===== */
+    .tipus-fila {
+      display: grid; grid-template-columns: 11rem 1fr; gap: 1rem; align-items: baseline;
+      padding: 1rem 0; border-bottom: 1px solid var(--guide-line);
+    }
+    .tipus-fila:last-child { border-bottom: 0; }
+    .tipus-fila dt { font-size: .85rem; color: var(--guide-muted); }
+    .tipus-fila dt strong { display: block; color: var(--color-text); font-size: .95rem; }
+    .tipus-fila dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+    @media (max-width: 40rem) { .tipus-fila { grid-template-columns: 1fr; gap: .25rem; } }
+
+    /* ===== 3. Espaiats, radis i ombres ===== */
+    .escala-espais { display: grid; gap: .6rem; }
+    .espai { display: grid; grid-template-columns: 9rem 1fr; align-items: center; gap: 1rem; font-size: .85rem; }
+    .espai__barra { height: .9rem; border-radius: 2px; background: color-mix(in srgb, var(--color-primary) 30%, white); }
+    .graella-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 1rem; }
+    .caixa {
+      display: grid; place-items: center; min-height: 6rem; padding: .75rem;
+      border: 2px solid var(--color-primary); background: var(--color-surface);
+      font-size: .85rem; text-align: center;
+    }
+    .caixa--ombra { border: 0; border-radius: var(--radius); box-shadow: 0 12px 40px #17203312; }
+    .fons-gris { padding: 1.25rem; border-radius: .5rem; background: var(--color-bg); }
+  </style>
+</head>
+<body>
+  <div class="guia">
+    <header>
+      <p class="guia-eyebrow">Quiz Trivial · Projecte Web &amp; GitHub</p>
+      <h1>Mockup i guia d'estil</h1>
+      <p class="guia-intro">
+        Referència visual del joc. Tots els colors, mides i components surten del CSS real
+        de l'app (<code>css/*.css</code>): si l'app canvia, aquest document s'ha d'actualitzar.
+        Les pantalles es dibuixen a 1280 px (escriptori) i 390 px (mòbil).
+      </p>
+      <nav aria-label="Seccions">
+        <ol>
+          <li><a href="#paleta">1. Paleta</a></li>
+          <li><a href="#tipografia">2. Tipografia</a></li>
+          <li><a href="#espais">3. Espais, radis i ombres</a></li>
+          <!-- INDEX-COMPONENTS -->
+        </ol>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ===================== 1. PALETA ===================== -->
+      <section class="seccio" id="paleta" aria-labelledby="t-paleta">
+        <h2 id="t-paleta"><span>1.</span> Paleta de colors</h2>
+        <p class="seccio-desc">
+          Els quatre primers són les variables de <code>base.css</code>. Encert, error i avís
+          estan escrits directament a <code>game.css</code>, <code>timer.css</code> i
+          <code>results.css</code>. El contrast és el ràtio WCAG 2.1 entre el text i el fons
+          indicats (AA demana 4,5:1 per a text normal i 3:1 per a text gran).
+        </p>
+
+        <div class="paleta">
+          <article class="mostra">
+            <div class="mostra__color" style="background:#4338ca;color:#fff">Aa <small>7,90:1 · AAA</small></div>
+            <div class="mostra__info">
+              <strong>Primari</strong>
+              <code>#4338ca · --color-primary</code>
+              <p>Botons, vores dels botons, etiqueta superior, temporitzador. Text blanc a sobre.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#f4f5fb;color:#172033">Aa <small>14,95:1 · AAA</small></div>
+            <div class="mostra__info">
+              <strong>Fons</strong>
+              <code>#f4f5fb · --color-bg</code>
+              <p>Fons de la pàgina, darrere de les targetes. Text principal a sobre.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#172033;color:#fff">Aa <small>16,27:1 · AAA</small></div>
+            <div class="mostra__info">
+              <strong>Text</strong>
+              <code>#172033 · --color-text</code>
+              <p>Text general, vora del camp de nom i contorn de focus.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#fff;color:#172033;border-bottom:1px solid var(--guide-line)">Aa <small>16,27:1 · AAA</small></div>
+            <div class="mostra__info">
+              <strong>Superfície</strong>
+              <code>#ffffff · --color-surface</code>
+              <p>Targetes, fons dels botons secundaris i text dels botons primaris.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#e6f7ee;color:#115c35;box-shadow:inset 0 -4px #147a45">Aa <small>7,25:1 · AAA</small></div>
+            <div class="mostra__info">
+              <strong>Encert</strong>
+              <code>vora #147a45 · fons #e6f7ee · text #115c35</code>
+              <p>Opció correcta (<code>.correct</code>). Vora sobre blanc: 5,39:1.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#fff0f0;color:#8c1b28;box-shadow:inset 0 -4px #b42332">Aa <small>8,24:1 · AAA</small></div>
+            <div class="mostra__info">
+              <strong>Error / perill</strong>
+              <code>vora #b42332 · fons #fff0f0 · text #8c1b28</code>
+              <p>Opció incorrecta (<code>.wrong</code>), missatge d'error del joc i temporitzador als últims 5 s. <code>#b42332</code> sobre blanc: 6,51:1.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#fff;color:#d35400;border-bottom:1px solid var(--guide-line)">Aa <small>4,17:1 · AA gran</small></div>
+            <div class="mostra__info">
+              <strong>Avís</strong>
+              <code>#d35400</code>
+              <p>«Resposta correcta: …» a la llista de resultats. Sobre el fons <code>#fff5f5</code> baixa a 3,90:1: no arriba a AA per a text petit.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:#fff;color:#172033;box-shadow:inset 0 -4px #cbd0df;border-bottom:1px solid var(--guide-line)">— <small>1,54:1 · decoratiu</small></div>
+            <div class="mostra__info">
+              <strong>Vora desactivada</strong>
+              <code>#cbd0df</code>
+              <p>Opcions que ja no es poden triar. Només decorativa: el text continua sent <code>#172033</code>.</p>
+            </div>
+          </article>
+          <article class="mostra">
+            <div class="mostra__color" style="background:var(--timer-track);color:#172033">Aa <small>≈ #e8e9eb</small></div>
+            <div class="mostra__info">
+              <strong>Pista del temporitzador</strong>
+              <code>color-mix(text 10%, superfície)</code>
+              <p>Fons de la barra de temps (<code>timer.css</code>).</p>
+            </div>
+          </article>
+        </div>
+
+        <h3>Colors fora de la paleta (només a <code>results.css</code>)</h3>
+        <div class="taula-wrap">
+          <table class="taula">
+            <thead><tr><th>Color</th><th>Ús</th><th>Contrast</th></tr></thead>
+            <tbody>
+              <tr><td><code>#2ecc71</code> / fons <code>#f0fff4</code></td><td>Vora esquerra i etiqueta «Correcta» de la llista</td><td><span class="etiqueta etiqueta--ko">2,10:1 amb text blanc</span></td></tr>
+              <tr><td><code>#e74c3c</code> / fons <code>#fff5f5</code></td><td>Vora esquerra i etiqueta «Incorrecta» de la llista</td><td><span class="etiqueta etiqueta--ko">3,82:1 amb text blanc</span></td></tr>
+              <tr><td><code>#e0e0e0</code>, <code>#ccc</code>, <code>#f9f9f9</code></td><td>Valors per defecte de variables que no existeixen (<code>--color-border</code>, <code>--color-bg-card</code>)</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================== 2. TIPOGRAFIA ===================== -->
+      <section class="seccio" id="tipografia" aria-labelledby="t-tipo">
+        <h2 id="t-tipo"><span>2.</span> Tipografia</h2>
+        <p class="seccio-desc">
+          Una sola família, la del sistema: <code>system-ui, -apple-system, "Segoe UI", sans-serif</code>
+          (Segoe UI a Windows, San Francisco a macOS i iOS, Roboto a Android). No es carrega cap font externa.
+          Base de 16 px i interlineat 1,5.
+        </p>
+        <dl>
+          <div class="tipus-fila">
+            <dt><strong>Títol de pantalla</strong>28–36 px · 700 · 1,5<br><code>clamp(1.75rem, 5vw, 2.25rem)</code></dt>
+            <dd style="font-size:2.25rem;font-weight:700;line-height:1.5">Quant en saps?</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Subtítol / pregunta</strong>24 px · 700 · 1,35 (pregunta) o 1,5<br><code>h2</code> per defecte</dt>
+            <dd style="font-size:1.5rem;font-weight:700;line-height:1.35">Quants jugadors té un equip de futbol al camp?</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Xifra del temporitzador</strong>28 px · 700 · xifres tabulars</dt>
+            <dd style="font-size:1.75rem;font-weight:700;color:var(--color-primary);font-variant-numeric:tabular-nums">15</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Resum de resultats</strong>20 px · 700 · primari</dt>
+            <dd style="font-size:1.25rem;font-weight:700;color:var(--color-primary)">Joan, has encertat 4 de 5</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Cos</strong>16 px · 400 · 1,5</dt>
+            <dd>Escriu el teu nom per començar a jugar.</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Etiqueta superior</strong>16 px · 750 · majúscules · espaiat .08em (.06em al joc)</dt>
+            <dd style="color:var(--color-primary);font-weight:750;letter-spacing:.08em;text-transform:uppercase">Quiz Trivial</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Etiqueta de formulari</strong>16 px · 650</dt>
+            <dd style="font-weight:650">Nom del jugador</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Botó</strong>16 px · 650</dt>
+            <dd style="font-weight:650;color:var(--color-primary)">Començar</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Ajuda i secundari</strong>14,4 px (.9rem) · 400</dt>
+            <dd style="font-size:.9rem">Màxim 20 caràcters.</dd>
+          </div>
+          <div class="tipus-fila">
+            <dt><strong>Insígnia de resultat</strong>12,8 px (.8rem) · 700 · majúscules</dt>
+            <dd><span style="display:inline-block;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;font-weight:700;text-transform:uppercase;background:#2ecc71;color:#fff">Correcta</span></dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- ===================== 3. ESPAIS ===================== -->
+      <section class="seccio" id="espais" aria-labelledby="t-espais">
+        <h2 id="t-espais"><span>3.</span> Espaiats, radis i ombres</h2>
+        <p class="seccio-desc">
+          La unitat base és <code>--space: 1rem</code> (16 px). La resta d'espais en són fraccions o múltiples.
+          A partir de 48rem (768 px) les pantalles i les targetes tenen més marge.
+        </p>
+
+        <h3>Escala d'espais</h3>
+        <div class="escala-espais">
+          <div class="espai"><code>.5rem · 8 px</code><div class="espai__barra" style="width:8px"></div></div>
+          <div class="espai"><code>.75rem · 12 px</code><div class="espai__barra" style="width:12px"></div></div>
+          <div class="espai"><code>1rem · 16 px</code><div class="espai__barra" style="width:16px"></div></div>
+          <div class="espai"><code>1.5rem · 24 px</code><div class="espai__barra" style="width:24px"></div></div>
+          <div class="espai"><code>2.5rem · 40 px</code><div class="espai__barra" style="width:40px"></div></div>
+          <div class="espai"><code>3rem · 48 px</code><div class="espai__barra" style="width:48px"></div></div>
+        </div>
+        <div class="taula-wrap" style="margin-top:1rem">
+          <table class="taula">
+            <thead><tr><th>On</th><th>Mòbil</th><th>≥ 48rem (768 px)</th></tr></thead>
+            <tbody>
+              <tr><td>Marge de la pantalla (<code>.screen</code>)</td><td>16 px</td><td>48 px</td></tr>
+              <tr><td>Farciment de la targeta (<code>.card</code>)</td><td>24 px</td><td>40 px</td></tr>
+              <tr><td>Separació entre opcions de resposta</td><td colspan="2">12 px</td></tr>
+              <tr><td>Separació entre categories i entre resultats</td><td colspan="2">16 px</td></tr>
+              <tr><td>Separació dins el formulari</td><td colspan="2">8 px</td></tr>
+              <tr><td>Farciment del botó</td><td colspan="2">12 px × 20 px · alçada mínima 48 px</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Radis</h3>
+        <div class="graella-3">
+          <div class="caixa" style="border-radius:1rem"><span><strong>16 px</strong><br><code>--radius</code> · targeta</span></div>
+          <div class="caixa" style="border-radius:.5rem"><span><strong>8 px</strong><br><code>--radius / 2</code> · botó i camp</span></div>
+          <div class="caixa" style="border-radius:999px"><span><strong>999 px</strong><br>barra del temporitzador</span></div>
+          <div class="caixa" style="border-radius:6px"><span><strong>6 px</strong><br>element de resultats</span></div>
+          <div class="caixa" style="border-radius:4px"><span><strong>4 px</strong><br>insígnia de resultats</span></div>
+        </div>
+
+        <h3>Ombra i focus</h3>
+        <div class="fons-gris graella-3">
+          <div class="caixa caixa--ombra"><span><strong>Targeta</strong><br><code>0 12px 40px #17203312</code><br><span class="font">text al 7 % d'opacitat</span></span></div>
+          <div class="caixa" style="border-radius:.5rem;outline:3px solid #172033;outline-offset:4px"><span><strong>Focus</strong><br><code>outline: 3px solid #172033</code><br><code>outline-offset: 4px</code></span></div>
+        </div>
+
+        <h3>Punts de tall</h3>
+        <ul>
+          <li><code>40rem</code> (640 px): les opcions de resposta passen a 2 columnes (<code>game.css</code>).</li>
+          <li><code>48rem</code> (768 px): més marge a pantalla i targeta, i categories a 2 columnes (<code>base.css</code>, <code>access.css</code>).</li>
+        </ul>
+      </section>
+
+      <!-- SECCIONS-COMPONENTS -->
+    </main>
+  </div>
+</body>
+</html>
