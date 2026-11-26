@@ -225,6 +225,78 @@
     /* Proposta (no és a l'app) */
     .app .progress { height: .5rem; border-radius: 999px; background: var(--timer-track); overflow: hidden; }
     .app .progress__fill { height: 100%; background: var(--color-primary); }
+
+    /* ===== 5. Pantalles en marcs ===== */
+    .pantalla { margin-top: 2.5rem; }
+    .pantalla:first-of-type { margin-top: 0; }
+    .pantalla__marcs { display: flex; gap: 1.5rem; align-items: flex-start; overflow-x: auto; padding: .25rem .25rem 1rem; }
+    .marc-fig { flex: none; display: grid; gap: .5rem; }
+    .marc-fig > figcaption { font-size: .8rem; font-weight: 650; color: var(--guide-muted); }
+    .marc-zoom { zoom: var(--escala); }
+    .marc {
+      overflow: hidden; border: 1px solid #c5c9d6; border-radius: 12px;
+      background: var(--color-bg); box-shadow: 0 8px 24px #1720331a;
+    }
+    .marc--escriptori { width: 1280px; }
+    .marc--mobil { width: 390px; border-radius: 28px; }
+    .marc__barra {
+      display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px;
+      background: #e9ebf2; border-bottom: 1px solid #c5c9d6; font-size: 13px; color: var(--guide-muted);
+    }
+    .marc__barra i { width: 11px; height: 11px; border-radius: 50%; background: #c5c9d6; }
+    .marc__barra span { margin-left: 10px; }
+    .marc--mobil .marc__barra { justify-content: center; }
+    .marc--mobil .marc__barra i { display: none; }
+
+    .app.screen { display: grid; place-items: center; padding: var(--space); background: var(--color-bg); }
+    .marc--escriptori .screen { min-height: 800px; padding: calc(var(--space) * 3); }
+    .marc--mobil .screen { min-height: 808px; }
+    /* Regles de les media queries de l'app (≥ 40rem i ≥ 48rem), aplicades al marc d'escriptori */
+    .marc--escriptori .card { padding: calc(var(--space) * 2.5); }
+    .marc--escriptori .access-card h1, .marc--escriptori .access-card h2 { font-size: 2.25rem; }
+    .marc--escriptori .category-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .marc--escriptori .game-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .marc--escriptori .results__list { max-height: 400px; overflow-y: auto; }
+    .marc--mobil .results__list { max-height: 404px; overflow-y: auto; }
+
+    /* Anotacions numerades */
+    .anotat { position: relative; }
+    /* El número es posa al marge esquerre de la targeta per no tapar el text */
+    .nota {
+      position: absolute; z-index: 2; top: -2px; left: -30px;
+      display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+      background: #c2185b; color: #fff; box-shadow: 0 0 0 3px #fff;
+      font: 700 15px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none;
+      pointer-events: none;
+    }
+    .marc--escriptori .nota { width: 34px; height: 34px; top: -4px; left: -40px; font-size: 18px; }
+    .nota--dreta, .marc--escriptori .nota--dreta { left: auto; right: -30px; }
+    .marc--escriptori .nota--dreta { right: -40px; }
+    .nota--cantonada, .marc--escriptori .nota--cantonada { top: -14px; left: auto; right: -14px; }
+    .nota--dins, .marc--escriptori .nota--dins { top: auto; bottom: 6px; left: auto; right: 6px; }
+    .anotacions { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: .5rem 1.5rem; margin: .75rem 0 0; padding: 0; list-style: none; counter-reset: nota; }
+    .anotacions li { position: relative; padding-left: 2.25rem; font-size: .9rem; counter-increment: nota; }
+    .anotacions li::before {
+      content: counter(nota); position: absolute; left: 0; top: .1rem;
+      display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%;
+      background: #c2185b; color: #fff; font-size: .8rem; font-weight: 700;
+    }
+
+    /* Mode captura: scripts de captura afegeixen .captura al <html> per treure l'escala */
+    .captura .marc-zoom { zoom: 1; }
+    .captura .pantalla__marcs { overflow: visible; width: max-content; padding: 24px; background: var(--color-surface); }
+
+    /* ===== 6. Flux ===== */
+    .flux > svg { display: block; width: 100%; height: auto; max-width: 60rem; margin: 0 auto; }
+    .flux .caixa-flux { fill: var(--color-surface); stroke: var(--color-primary); stroke-width: 2; }
+    .flux .num-flux { fill: var(--color-primary); font-weight: 750; font-size: 13px; letter-spacing: .08em; }
+    .flux .nom-flux { fill: var(--color-text); font-weight: 700; font-size: 17px; }
+    .flux .endavant { fill: none; stroke: var(--color-primary); stroke-width: 2.5; }
+    .flux .enrere { fill: none; stroke: var(--guide-muted); stroke-width: 2; stroke-dasharray: 6 5; }
+    .flux .etq { fill: var(--color-text); font-size: 13px; }
+    .flux .etq--fosca { fill: var(--guide-muted); }
+    .llegenda { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: 1rem 0 0; padding: 0; list-style: none; font-size: .85rem; color: var(--guide-muted); }
+    .llegenda svg { vertical-align: middle; margin-right: .35rem; }
   </style>
 </head>
 <body>
@@ -243,7 +315,8 @@
           <li><a href="#tipografia">2. Tipografia</a></li>
           <li><a href="#espais">3. Espais, radis i ombres</a></li>
           <li><a href="#components">4. Components</a></li>
-          <!-- INDEX-PANTALLES -->
+          <li><a href="#pantalles">5. Pantalles</a></li>
+          <li><a href="#flux">6. Flux</a></li>
         </ol>
       </nav>
     </header>
@@ -613,8 +686,296 @@
         </div>
       </section>
 
-      <!-- SECCIONS-PANTALLES -->
+      <!-- ===================== 5. PANTALLES ===================== -->
+      <section class="seccio" id="pantalles" aria-labelledby="t-pant">
+        <h2 id="t-pant"><span>5.</span> Pantalles</h2>
+        <p class="seccio-desc">
+          Cada pantalla es dibuixa a 1280 × 800 px (escriptori) i 390 × 844 px (mòbil), reduïdes al 60 %.
+          La versió mòbil es genera copiant l'escriptori, així que el contingut és el mateix: només canvien
+          les regles de les media queries. Els números rosa són anotacions, no formen part del disseny.
+        </p>
+
+        <!-- 01 · BENVINGUDA -->
+        <article class="pantalla" id="p-benvinguda" aria-labelledby="t-p1">
+          <h3 id="t-p1">01 · Benvinguda <code>#screen-welcome</code></h3>
+          <div class="pantalla__marcs" data-captura="01-benvinguda">
+            <figure class="marc-fig">
+              <figcaption>Escriptori · 1280 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--escriptori">
+                <div class="marc__barra" aria-hidden="true"><i></i><i></i><i></i><span>index.html</span></div>
+                <section class="app screen" data-plantilla>
+                  <div class="card access-card anotat">
+                    <span class="nota nota--cantonada" aria-hidden="true">6</span>
+                    <header>
+                      <p class="access-eyebrow anotat" style="display:inline-block"><span class="nota" aria-hidden="true">1</span>Quiz Trivial</p>
+                      <h1 class="anotat"><span class="nota" aria-hidden="true">2</span>Quant en saps?</h1>
+                      <p>Escriu el teu nom per començar a jugar.</p>
+                    </header>
+                    <form class="welcome-form" onsubmit="return false">
+                      <label class="anotat" for="m1-nom" style="justify-self:start"><span class="nota" aria-hidden="true">3</span>Nom del jugador</label>
+                      <input class="player-name" id="m1-nom" type="text" value="Joan" autocomplete="off">
+                      <p class="access-help anotat" style="margin:0"><span class="nota" aria-hidden="true">4</span>Màxim 20 caràcters.</p>
+                      <p class="access-error" style="margin:0"></p>
+                      <button class="btn btn--primary anotat" type="button"><span class="nota" aria-hidden="true">5</span>Començar</button>
+                    </form>
+                  </div>
+                </section>
+              </div></div>
+            </figure>
+            <figure class="marc-fig">
+              <figcaption>Mòbil · 390 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--mobil">
+                <div class="marc__barra" aria-hidden="true"><span>index.html</span></div>
+                <div data-copia></div>
+              </div></div>
+            </figure>
+          </div>
+          <ol class="anotacions">
+            <li>Etiqueta superior «Quiz Trivial»: primari, 750, majúscules.</li>
+            <li>Títol <code>h1</code>: 36 px a escriptori, 28 px a mòbil.</li>
+            <li>Camp de nom amb etiqueta sempre visible. Obligatori, sense espais als extrems.</li>
+            <li>Ajuda «Màxim 20 caràcters» i, a sota, la zona d'error (<code>role="alert"</code>) amb espai reservat.</li>
+            <li>Botó primari «Començar». La tecla Enter també envia el formulari.</li>
+            <li>Targeta centrada a la pantalla, amplada màxima 42rem (672 px).</li>
+          </ol>
+        </article>
+
+        <!-- 02 · TIPUS -->
+        <article class="pantalla" id="p-tipus" aria-labelledby="t-p2">
+          <h3 id="t-p2">02 · Tipus de preguntes <code>#screen-types</code></h3>
+          <div class="pantalla__marcs" data-captura="02-tipus">
+            <figure class="marc-fig">
+              <figcaption>Escriptori · 1280 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--escriptori">
+                <div class="marc__barra" aria-hidden="true"><i></i><i></i><i></i><span>index.html</span></div>
+                <section class="app screen" data-plantilla>
+                  <div class="card access-card">
+                    <header>
+                      <p class="access-eyebrow">Quiz Trivial</p>
+                      <h2 class="anotat"><span class="nota" aria-hidden="true">1</span>Hola, Joan!</h2>
+                      <p class="anotat" style="display:inline-block"><span class="nota" aria-hidden="true">2</span>Tria un tipus de preguntes.</p>
+                    </header>
+                    <div class="category-list anotat" aria-label="Tipus de preguntes">
+                      <span class="nota" aria-hidden="true">3</span>
+                      <button class="btn" type="button">Esport</button>
+                      <button class="btn" type="button">Menjar</button>
+                    </div>
+                  </div>
+                </section>
+              </div></div>
+            </figure>
+            <figure class="marc-fig">
+              <figcaption>Mòbil · 390 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--mobil">
+                <div class="marc__barra" aria-hidden="true"><span>index.html</span></div>
+                <div data-copia></div>
+              </div></div>
+            </figure>
+          </div>
+          <ol class="anotacions">
+            <li>Salutació amb el nom del jugador. Rep el focus en arribar a la pantalla.</li>
+            <li>Instrucció curta.</li>
+            <li>Un botó secundari per categoria, generat des de <code>QUESTIONS</code> (ara Esport i Menjar). Dues columnes a partir de 768 px, una a mòbil.</li>
+          </ol>
+        </article>
+
+        <!-- 03 · PREGUNTA -->
+        <article class="pantalla" id="p-pregunta" aria-labelledby="t-p3">
+          <h3 id="t-p3">03 · Pregunta <code>#screen-game</code></h3>
+          <div class="pantalla__marcs" data-captura="03-pregunta">
+            <figure class="marc-fig">
+              <figcaption>Escriptori · 1280 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--escriptori">
+                <div class="marc__barra" aria-hidden="true"><i></i><i></i><i></i><span>index.html</span></div>
+                <section class="app screen" data-plantilla>
+                  <div class="card game-card">
+                    <header>
+                      <p class="game-category anotat" style="display:inline-block"><span class="nota" aria-hidden="true">1</span>Esport</p>
+                      <div class="game-meta">
+                        <p class="anotat"><span class="nota" aria-hidden="true">2</span>Pregunta 2 de 5</p>
+                        <p class="anotat"><span class="nota nota--dreta" aria-hidden="true">3</span>Punts: 1</p>
+                      </div>
+                      <div class="timer anotat" role="img" aria-label="Temps restant: 9 s">
+                        <span class="nota" aria-hidden="true">4</span>
+                        <span class="timer__number">9</span><div class="timer__bar"><div class="timer__fill" style="width:60%"></div></div>
+                      </div>
+                    </header>
+                    <h2 class="game-question anotat"><span class="nota" aria-hidden="true">5</span>Quants jugadors té un equip de futbol al camp?</h2>
+                    <div class="game-options anotat" role="group">
+                      <span class="nota" aria-hidden="true">6</span>
+                      <button class="btn game-option" type="button">9</button>
+                      <button class="btn game-option" type="button">10</button>
+                      <button class="btn game-option" type="button">11</button>
+                      <button class="btn game-option" type="button">12</button>
+                    </div>
+                    <p class="game-feedback anotat"><span class="nota" aria-hidden="true">7</span></p>
+                    <button class="btn game-back anotat" type="button"><span class="nota" aria-hidden="true">8</span>Tornar als tipus</button>
+                  </div>
+                </section>
+              </div></div>
+            </figure>
+            <figure class="marc-fig">
+              <figcaption>Mòbil · 390 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--mobil">
+                <div class="marc__barra" aria-hidden="true"><span>index.html</span></div>
+                <div data-copia></div>
+              </div></div>
+            </figure>
+          </div>
+          <ol class="anotacions">
+            <li>Categoria triada: primari, 750, majúscules (espaiat .06em).</li>
+            <li>Progrés en text: «Pregunta 2 de 5».</li>
+            <li>Punts acumulats. S'anuncien al lector de pantalla (<code>aria-live</code>).</li>
+            <li>Temporitzador de 15 s: xifra i barra que es buida. Vermell als últims 5 s (vegeu components).</li>
+            <li>Enunciat <code>h2</code> de 24 px, interlineat 1,35. Rep el focus a cada pregunta.</li>
+            <li>Quatre opcions: dues columnes a partir de 640 px, una a mòbil. Estats a la secció 4.</li>
+            <li>Zona de feedback buida fins que es respon. Llavors hi apareix el missatge i el botó «Següent» (o «Veure resultats» a l'última).</li>
+            <li>Botó secundari petit (14,4 px) per tornar a triar categoria. Atura la partida.</li>
+          </ol>
+        </article>
+
+        <!-- 04 · RESULTATS -->
+        <article class="pantalla" id="p-resultats" aria-labelledby="t-p4">
+          <h3 id="t-p4">04 · Resultats <code>#screen-results</code></h3>
+          <div class="pantalla__marcs" data-captura="04-resultats">
+            <figure class="marc-fig">
+              <figcaption>Escriptori · 1280 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--escriptori">
+                <div class="marc__barra" aria-hidden="true"><i></i><i></i><i></i><span>index.html</span></div>
+                <section class="app screen" data-plantilla>
+                  <div class="card card--results">
+                    <h2 class="anotat" style="display:inline-block"><span class="nota" aria-hidden="true">1</span>Resultats finals</h2>
+                    <p class="results__summary anotat"><span class="nota" aria-hidden="true">2</span>Joan, has encertat 3 de 5</p>
+                    <div class="anotat">
+                      <span class="nota" aria-hidden="true">3</span>
+                      <div class="results__list">
+                        <div class="results__item results__item--correct anotat">
+                          <span class="nota nota--dins" aria-hidden="true">4</span>
+                          <div class="results__question-text">1. Quants jugadors té un equip de futbol al camp?</div>
+                          <div class="results__answer-info"><span class="results__badge results__badge--ok">Correcta</span> La teva resposta: <strong>11</strong></div>
+                        </div>
+                        <div class="results__item results__item--incorrect anotat">
+                          <span class="nota nota--dins" aria-hidden="true">5</span>
+                          <div class="results__question-text">2. En quin esport destaca o ha destacat Rafa Nadal?</div>
+                          <div class="results__answer-info"><span class="results__badge results__badge--fail">Incorrecta</span> La teva resposta: <strong>Golf</strong></div>
+                          <div class="results__correct-solution">Resposta correcta: <strong>Tennis</strong></div>
+                        </div>
+                        <div class="results__item results__item--correct">
+                          <div class="results__question-text">3. Quin esport utilitza un 'puck' o disc en lloc d'una pilota?</div>
+                          <div class="results__answer-info"><span class="results__badge results__badge--ok">Correcta</span> La teva resposta: <strong>Hoquei sobre gel</strong></div>
+                        </div>
+                        <div class="results__item results__item--incorrect">
+                          <div class="results__question-text">4. Quant dura un partit de basquetbol de la NBA (temps regulat)?</div>
+                          <div class="results__answer-info"><span class="results__badge results__badge--fail">Incorrecta</span> La teva resposta: <strong>Temps esgotat</strong></div>
+                          <div class="results__correct-solution">Resposta correcta: <strong>48 minuts</strong></div>
+                        </div>
+                        <div class="results__item results__item--correct">
+                          <div class="results__question-text">5. Cinquanta metres és la distància d'una piscina de quin tipus?</div>
+                          <div class="results__answer-info"><span class="results__badge results__badge--ok">Correcta</span> La teva resposta: <strong>Olímpica</strong></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="results__actions">
+                      <button class="btn btn--primary anotat" type="button"><span class="nota" aria-hidden="true">6</span>Tornar a jugar</button>
+                      <button class="btn anotat" type="button"><span class="nota nota--dreta" aria-hidden="true">7</span>Sortir</button>
+                    </div>
+                  </div>
+                </section>
+              </div></div>
+            </figure>
+            <figure class="marc-fig">
+              <figcaption>Mòbil · 390 px</figcaption>
+              <div class="marc-zoom"><div class="marc marc--mobil">
+                <div class="marc__barra" aria-hidden="true"><span>index.html</span></div>
+                <div data-copia></div>
+              </div></div>
+            </figure>
+          </div>
+          <ol class="anotacions">
+            <li>Títol <code>h2</code> «Resultats finals» (24 px).</li>
+            <li>Resum centrat: nom i encerts, 20 px, primari.</li>
+            <li>Llista de respostes. Si fa més del 50 % de l'alçada de la finestra, es desplaça per dins.</li>
+            <li>Resposta correcta: vora esquerra verda i insígnia «Correcta».</li>
+            <li>Resposta incorrecta o temps esgotat: vora vermella, insígnia «Incorrecta» i la resposta correcta en taronja.</li>
+            <li>«Tornar a jugar» (primari): torna als tipus i manté el nom.</li>
+            <li>«Sortir» (secundari): torna a la benvinguda i esborra el nom.</li>
+          </ol>
+        </article>
+      </section>
+
+      <!-- ===================== 6. FLUX ===================== -->
+      <section class="seccio flux" id="flux" aria-labelledby="t-flux">
+        <h2 id="t-flux"><span>6.</span> Flux entre pantalles</h2>
+        <p class="seccio-desc">
+          Només hi ha una pantalla visible alhora: <code>showScreen(id)</code> de <code>main.js</code> hi posa la classe
+          <code>.active</code>. Cada partida té 5 preguntes de la categoria triada, en ordre aleatori.
+        </p>
+        <svg viewBox="0 0 940 330" role="img" aria-labelledby="flux-t flux-d">
+          <title id="flux-t">Flux entre les quatre pantalles</title>
+          <desc id="flux-d">Benvinguda porta a Tipus amb Començar. Tipus porta a Pregunta en triar una categoria. Pregunta es repeteix cinc vegades i porta a Resultats. Des de Pregunta es pot tornar a Tipus. Des de Resultats, Tornar a jugar porta a Tipus i Sortir porta a Benvinguda.</desc>
+          <defs>
+            <marker id="fl-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4338ca"/></marker>
+            <marker id="fl-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4a5368"/></marker>
+          </defs>
+
+          <!-- Caixes -->
+          <rect class="caixa-flux" x="20"  y="90" width="170" height="72" rx="12"/>
+          <rect class="caixa-flux" x="270" y="90" width="170" height="72" rx="12"/>
+          <rect class="caixa-flux" x="520" y="90" width="170" height="72" rx="12"/>
+          <rect class="caixa-flux" x="750" y="90" width="170" height="72" rx="12"/>
+          <text class="num-flux" x="105" y="117" text-anchor="middle">01</text>
+          <text class="nom-flux" x="105" y="142" text-anchor="middle">Benvinguda</text>
+          <text class="num-flux" x="355" y="117" text-anchor="middle">02</text>
+          <text class="nom-flux" x="355" y="142" text-anchor="middle">Tipus</text>
+          <text class="num-flux" x="605" y="117" text-anchor="middle">03</text>
+          <text class="nom-flux" x="605" y="142" text-anchor="middle">Pregunta</text>
+          <text class="num-flux" x="835" y="117" text-anchor="middle">04</text>
+          <text class="nom-flux" x="835" y="142" text-anchor="middle">Resultats</text>
+
+          <!-- Endavant -->
+          <path class="endavant" d="M190 126 H264" marker-end="url(#fl-p)"/>
+          <text class="etq" x="229" y="64" text-anchor="middle">Començar</text>
+          <text class="etq etq--fosca" x="229" y="80" text-anchor="middle">nom vàlid</text>
+          <path class="endavant" d="M440 126 H514" marker-end="url(#fl-p)"/>
+          <text class="etq" x="479" y="64" text-anchor="middle">Tria</text>
+          <text class="etq etq--fosca" x="479" y="80" text-anchor="middle">categoria</text>
+          <path class="endavant" d="M690 126 H744" marker-end="url(#fl-p)"/>
+          <text class="etq" x="719" y="64" text-anchor="middle">Veure</text>
+          <text class="etq etq--fosca" x="719" y="80" text-anchor="middle">resultats</text>
+
+          <!-- Bucle de preguntes -->
+          <path class="endavant" d="M575 90 C575 30, 635 30, 635 86" marker-end="url(#fl-p)"/>
+          <text class="etq" x="605" y="24" text-anchor="middle">Següent o temps esgotat · ×5</text>
+
+          <!-- Enrere -->
+          <path class="enrere" d="M605 162 C605 210, 355 210, 355 168" marker-end="url(#fl-g)"/>
+          <text class="etq etq--fosca" x="480" y="222" text-anchor="middle">Tornar als tipus</text>
+          <path class="enrere" d="M835 162 C835 268, 330 268, 330 168" marker-end="url(#fl-g)"/>
+          <text class="etq etq--fosca" x="580" y="262" text-anchor="middle">Tornar a jugar (manté el nom)</text>
+          <path class="enrere" d="M860 162 C860 320, 105 320, 105 168" marker-end="url(#fl-g)"/>
+          <text class="etq etq--fosca" x="480" y="318" text-anchor="middle">Sortir (esborra el nom)</text>
+        </svg>
+        <ul class="llegenda">
+          <li><svg width="34" height="10" aria-hidden="true"><path d="M0 5 H34" stroke="#4338ca" stroke-width="2.5"/></svg>Avançar en la partida</li>
+          <li><svg width="34" height="10" aria-hidden="true"><path d="M0 5 H34" stroke="#4a5368" stroke-width="2" stroke-dasharray="6 5"/></svg>Tornar enrere</li>
+        </ul>
+      </section>
     </main>
   </div>
+
+  <script>
+    // La versió mòbil de cada pantalla és una còpia de l'escriptori.
+    // Així només cal mantenir un dibuix; els ids es canvien perquè no es repeteixin.
+    document.querySelectorAll(".pantalla__marcs").forEach(function (marcs) {
+      const original = marcs.querySelector("[data-plantilla]");
+      const desti = marcs.querySelector("[data-copia]");
+      if (!original || !desti) { return; }
+      const copia = original.cloneNode(true);
+      copia.removeAttribute("data-plantilla");
+      copia.querySelectorAll("[id]").forEach(function (el) { el.id += "-m"; });
+      copia.querySelectorAll("[for]").forEach(function (el) { el.htmlFor += "-m"; });
+      desti.replaceWith(copia);
+    });
+  </script>
 </body>
 </html>
