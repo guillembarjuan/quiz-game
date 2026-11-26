@@ -52,7 +52,20 @@ function pickGameQuestions(categoryKey, questions) {
   // Les repetides van al final, però el resultat es torna a barrejar.
   const picked = shuffle(fresh.concat(repeated).slice(0, QUESTIONS_PER_GAME));
   lastGameTexts[categoryKey] = picked.map(function (question) { return question.text; });
-  return picked;
+  return picked.map(prepareQuestion);
+}
+
+/**
+ * Còpia de la pregunta amb les opcions barrejades.
+ * Guarda el text de la correcta a `answer`: és el que es compara en respondre,
+ * així la posició de l'opció no importa.
+ */
+function prepareQuestion(question) {
+  return {
+    text: question.text,
+    options: shuffle(question.options),
+    answer: question.options[question.correct]
+  };
 }
 
 /** Inicia una partida nova amb la categoria que arriba d'access.js. */
@@ -75,6 +88,8 @@ function startGame(name, categoryKey) {
         return question && typeof question.text === "string" &&
           Array.isArray(question.options) && question.options.length === 4 &&
           question.options.every(function (option) { return typeof option === "string"; }) &&
+          // Es valida pel text: dues opcions iguals farien ambigua la resposta.
+          new Set(question.options).size === 4 &&
           Number.isInteger(question.correct) && question.correct >= 0 && question.correct < 4;
       })) {
     error.textContent = "Aquesta categoria no existeix o encara no té preguntes vàlides.";
@@ -106,14 +121,14 @@ function renderQuestion() {
   title.textContent = question.text;
   const options = document.getElementById("game-options");
   options.replaceChildren();
-  question.options.forEach(function (option, chosenIndex) {
+  question.options.forEach(function (option) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "btn game-option";
     button.textContent = option;
     button.addEventListener("click", function () {
       // Un clic pendent d'una pregunta anterior no pot respondre la nova.
-      if (turn === gameState.turn) { answerQuestion(chosenIndex); }
+      if (turn === gameState.turn) { answerQuestion(option); }
     });
     options.appendChild(button);
   });
@@ -145,51 +160,49 @@ function renderQuestion() {
   }
 }
 
-/** Funció pura: es pot provar també des de la consola del navegador. */
-function checkAnswer(question, chosenIndex) {
-  return Number.isInteger(chosenIndex) && chosenIndex >= 0 && chosenIndex < 4 &&
-    chosenIndex === question.correct;
+/** Funció pura: compara el text triat amb el de la correcta. Es pot provar des de la consola. */
+function checkAnswer(question, chosenText) {
+  return typeof chosenText === "string" && chosenText === question.answer;
 }
 
-function answerQuestion(chosenIndex) {
+/** chosenText és el text de l'opció triada, o null si s'ha acabat el temps. */
+function answerQuestion(chosenText) {
   if (!gameState.active || gameState.answered) { return; }
-  if (chosenIndex !== null && (!Number.isInteger(chosenIndex) || chosenIndex < 0 || chosenIndex > 3)) {
-    return;
-  }
+  const question = gameState.questions[gameState.index];
+  if (chosenText !== null && question.options.indexOf(chosenText) === -1) { return; }
   gameState.answered = true;
   if (typeof stopTimer === "function") { stopTimer(); }
-  const question = gameState.questions[gameState.index];
-  const isCorrect = checkAnswer(question, chosenIndex);
+  const isCorrect = checkAnswer(question, chosenText);
   if (isCorrect) { gameState.score++; }
   // chosen i correct són els textos de les opcions; category és la clau del banc.
   gameState.answers.push({
-    text: question.text, chosen: chosenIndex === null ? null : question.options[chosenIndex],
-    correct: question.options[question.correct], isCorrect: isCorrect
+    text: question.text, chosen: chosenText, correct: question.answer, isCorrect: isCorrect
   });
   // Bloquegem totes les opcions abans de mostrar el feedback.
   const buttons = document.getElementById("game-options").querySelectorAll("button");
   buttons.forEach(function (button, index) {
+    const option = question.options[index];
     button.disabled = true;
     button.classList.add("disabled");
-    if (index === question.correct) {
+    if (option === question.answer) {
       button.classList.add("correct");
       button.textContent += " — Correcta";
-    } else if (index === chosenIndex) {
+    } else if (option === chosenText) {
       button.classList.add("wrong");
       button.textContent += " — La teva resposta";
     }
   });
   document.getElementById("game-score").textContent = "Punts: " + gameState.score;
-  document.getElementById("game-feedback").textContent = chosenIndex === null ?
-    "Temps esgotat. La resposta correcta és: " + question.options[question.correct] :
+  document.getElementById("game-feedback").textContent = chosenText === null ?
+    "Temps esgotat. La resposta correcta és: " + question.answer :
     isCorrect ? "Correcte! Has guanyat un punt." :
-    "Incorrecte. La resposta correcta és: " + question.options[question.correct];
+    "Incorrecte. La resposta correcta és: " + question.answer;
   const next = document.getElementById("game-next");
   next.textContent = gameState.index === gameState.questions.length - 1 ? "Veure resultats" : "Següent";
   next.hidden = false;
   next.focus();
   // Donem temps a llegir la correcta abans d'avançar en esgotar el temps.
-  if (chosenIndex === null) {
+  if (chosenText === null) {
     const turn = gameState.turn;
     gameAdvanceTimeout = setTimeout(function () {
       if (gameState.active && turn === gameState.turn) { nextQuestion(); }
