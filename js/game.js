@@ -11,21 +11,48 @@ const gameState = {
 };
 let gameAdvanceTimeout = null;
 
+// Preguntes per partida. Si la categoria en té menys, es fan servir totes.
+const QUESTIONS_PER_GAME = 5;
+// Textos de l'última partida de cada categoria (només en memòria).
+const lastGameTexts = {};
+
 function cancelGameAdvance() {
   clearTimeout(gameAdvanceTimeout);
   gameAdvanceTimeout = null;
 }
 
-/** Fisher-Yates sobre una còpia: conserva intactes les preguntes i les opcions. */
-function shuffleQuestions(questions) {
-  const shuffled = questions.slice();
+/** Fisher-Yates sobre una còpia: no modifica l'array original. */
+function shuffle(items) {
+  const shuffled = items.slice();
   for (let index = shuffled.length - 1; index > 0; index--) {
     const other = Math.floor(Math.random() * (index + 1));
-    const question = shuffled[index];
+    const item = shuffled[index];
     shuffled[index] = shuffled[other];
-    shuffled[other] = question;
+    shuffled[other] = item;
   }
   return shuffled;
+}
+
+/**
+ * Tria a l'atzar les preguntes d'una partida.
+ * Primer agafa les que no van sortir a la partida anterior de la categoria
+ * i només repeteix si no n'hi ha prou de noves. Les preguntes amb el mateix
+ * text compten com una de sola.
+ */
+function pickGameQuestions(categoryKey, questions) {
+  const seen = new Set();
+  const unique = shuffle(questions).filter(function (question) {
+    if (seen.has(question.text)) { return false; }
+    seen.add(question.text);
+    return true;
+  });
+  const previous = lastGameTexts[categoryKey] || [];
+  const fresh = unique.filter(function (question) { return previous.indexOf(question.text) === -1; });
+  const repeated = unique.filter(function (question) { return previous.indexOf(question.text) !== -1; });
+  // Les repetides van al final, però el resultat es torna a barrejar.
+  const picked = shuffle(fresh.concat(repeated).slice(0, QUESTIONS_PER_GAME));
+  lastGameTexts[categoryKey] = picked.map(function (question) { return question.text; });
+  return picked;
 }
 
 /** Inicia una partida nova amb la categoria que arriba d'access.js. */
@@ -56,7 +83,7 @@ function startGame(name, categoryKey) {
   }
 
   Object.assign(gameState, {
-    name: name, category: categoryKey, questions: shuffleQuestions(category.questions),
+    name: name, category: categoryKey, questions: pickGameQuestions(categoryKey, category.questions),
     index: 0, score: 0, answers: [], answered: false, active: true
   });
   document.getElementById("game-category").textContent = category.label;
